@@ -11,8 +11,7 @@ import { validarDireccionAgregarUser } from '../helpers/usuario.js';
 const usuarioControllers = {
 
     //agregar usuario
-    guardarUsuarioPost : async(req,res)=>{
-        console.log("entre");
+    guardarUsuarioPost : async(req, res)=>{
 
         //capturar variables
         const {nombre, nombreUsuario, password, rol, ...resto} = req.body;
@@ -27,8 +26,8 @@ const usuarioControllers = {
         var address = '';
 
         // validar email
-        if(resto.email != undefined){
-            let recibirDireccion = resto.email;
+        if(resto.direccion != undefined){
+            let recibirDireccion = resto.direccion;
             address = recibirDireccion.toString().trim();
             let validar = await validarDireccionAgregarUser(address);
             if(validar != true){ return res.status(400).json({msg : `${validar}`})}
@@ -54,12 +53,20 @@ const usuarioControllers = {
             if(err){
                 console.log("error aca");
                 console.log(err);
-                return res.status(400).json("Error al guardar en la bd")
+                return res.status(400).json({msg : `${err}`});
             }
-            return res.json({rows})
+            return res.json({msg:"Usuario agregado"})
         })
+        return res.json({msg:"Usuario agregado"})
         
+    },
+
+    //iniciar sesion
+    iniciarSesionUsuarioPost : async(req, res) =>{
+        // capturar variable
+        const { nombreUsuario, password} = req.body;
     }
+
 }
 
 export default usuarioControllers

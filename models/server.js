@@ -4,8 +4,13 @@ import express from 'express';
 // validar ubicacion geografica de peticiones
 import cors from 'cors';
 
+// manejar archivos en el servidor
+import fileUpload from 'express-fileupload';
+
+
 // // solicitar conexion con base de datos
 // import pool from '../database/config.js'
+
 
 
 
@@ -47,6 +52,18 @@ class Server{
 
         //conectar con front-end
         this.app.use(express.static('public'));
+
+        // crear archivo
+        this.app.use(fileUpload({
+            //crear archivo temporar para subir
+            useTempFiles : true,
+
+            //crear carpeta donde va a guardar archivo
+            tempFileDir : '/tmp/',
+
+            // si no existe la carpeta creela
+            createParentPath : true
+        }))
     }
 
     // rutas

@@ -16,6 +16,7 @@ import { promisify } from 'util';
 
 // const { host, user, password, database }  = process.env.DATABASE
 var  database   = process.env.DATABASE;
+// var  database   = process.env.DATABASE_NUVE;
 var  database   = JSON.parse(database);
 
 // crear conexion con base de datos
