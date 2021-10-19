@@ -21,7 +21,7 @@ const usuarioControllers = {
         const pass = password.toString().trim()
 
         // propiedades no obligatorias
-        var addressEmail = '';
+        var address = '';
 
         // crear objeto usuario
         const usuario = {
@@ -29,7 +29,7 @@ const usuarioControllers = {
             nombreUsuario : nameUser,
             password : pass,
             rol : permisos,
-            email : addressEmail
+            direccion : address
         }
 
         // numero de capaz para encriptar las password
@@ -41,15 +41,15 @@ const usuarioControllers = {
         console.log(usuario);
 
         // guardar cliente
-        await  pool.query('INSERT INTO usuario set ?', [usuario],(err,rows)=>{
+        const usuariobd = await  pool.query('INSERT INTO usuario set ?', [usuario],(err,rows)=>{
             if(err){
+                console.log("error aca");
                 console.log(err);
-                return res.status(400).json({msg:"pailias"})
             }
-            console.log(rows);
-            res.json({msg:"Usuario agregado"});
+            return res.json({rows})
         })
 
+        res.json({usuariobd})
         
     }
 }

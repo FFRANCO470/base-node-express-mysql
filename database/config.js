@@ -5,10 +5,22 @@ import mysql from 'mysql';
 import { promisify } from 'util';
 
 // capturar configuracion de la bd
-const database = process.env.database;
+// const database = process.env.DATABASE;
+
+// const database ={
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'database_links'
+// }
+
+// const { host, user, password, database }  = process.env.DATABASE
+var  database   = process.env.DATABASE;
+var  database   = JSON.parse(database);
 
 // crear conexion con base de datos
 const pool = mysql.createPool(database);
+
 
 pool.getConnection((err,connection)=>{
     if(err){
@@ -34,13 +46,13 @@ pool.getConnection((err,connection)=>{
         if(err.code === "ER_ACCESS_DENIED_ERROR"){
             console.error(`${err.sqlMessage}`)
         }
+    }else{
+        connection.release();
+        console.log('conectado a base de datos');
+        
+    }   
 
-        if(connection) connection.release();
-
-        console.log('Conectado a base de datos')
-
-        return;
-    }
+    return;
 })
 
 pool.query = promisify(pool.query);

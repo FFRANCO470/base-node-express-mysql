@@ -4,8 +4,8 @@ import express from 'express';
 // validar ubicacion geografica de peticiones
 import cors from 'cors';
 
-// solicitar conexion con base de datos
-import pool from '../database/config.js'
+// // solicitar conexion con base de datos
+// import pool from '../database/config.js'
 
 
 
@@ -23,7 +23,7 @@ class Server{
         this.app = express();
 
         // conectar con bd
-        this.conectarDB();
+        // this.conectarDB();
 
         // middelwares
         this.middlewares();
@@ -32,9 +32,9 @@ class Server{
        this.routes();
     }
     
-    async conectarDB(){
-        await pool;
-    }
+    // async conectarDB(){
+    //     await pool;
+    // }
 
     // metodo para llamar los middlewares
     middlewares(){
