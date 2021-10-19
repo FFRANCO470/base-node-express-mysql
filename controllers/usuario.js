@@ -1,8 +1,11 @@
 // dependencia para encriptar
 import bcryptjs from 'bcryptjs';
 
-// oprtst con base de datos
+// operar con base de datos
 import pool from '../database/config.js'
+
+// funcioens de apoyo
+import { validarDireccionAgregarUser } from '../helpers/usuario.js';
 
 //controlador general
 const usuarioControllers = {
@@ -23,6 +26,14 @@ const usuarioControllers = {
         // propiedades no obligatorias
         var address = '';
 
+        // validar email
+        if(resto.email != undefined){
+            let recibirDireccion = resto.email;
+            address = recibirDireccion.toString().trim();
+            let validar = await validarDireccionAgregarUser(address);
+            if(validar != true){ return res.status(400).json({msg : `${validar}`})}
+        }
+
         // crear objeto usuario
         const usuario = {
             nombre : name,
@@ -37,19 +48,16 @@ const usuarioControllers = {
 
         // encriptar password
         usuario.password = bcryptjs.hashSync(pass,salt);
-        
-        console.log(usuario);
 
         // guardar cliente
         const usuariobd = await  pool.query('INSERT INTO usuario set ?', [usuario],(err,rows)=>{
             if(err){
                 console.log("error aca");
                 console.log(err);
+                return res.status(400).json("Error al guardar en la bd")
             }
             return res.json({rows})
         })
-
-        res.json({usuariobd})
         
     }
 }
