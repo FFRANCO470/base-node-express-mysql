@@ -5,6 +5,7 @@ import bcryptjs from 'bcryptjs';
 import pool from '../database/config.js'
 
 // funcioens de apoyo
+import { generarJWT } from "../middlewares/validarJwt.js";
 import { validarDireccionAgregarUser } from '../helpers/usuario.js';
 
 //controlador general
@@ -65,7 +66,49 @@ const usuarioControllers = {
     iniciarSesionUsuarioPost : async(req, res) =>{
         // capturar variable
         const { nombreUsuario, password} = req.body;
-    }
+
+        //limpiar variables
+        const nameUser = nombreUsuario.toString().toLowerCase().trim();
+        const pass = password.toString().trim();
+
+        //buscar usuario
+        const user = await pool.query('SELECT * FROM usuario WHERE nombreUsuario = ?', [nombreUsuario]);
+
+        //transforar en un objeto
+        const usuario = JSON.parse(JSON.stringify(user[0]));
+
+        //validar contraseña
+        const validarPasswordLogin = bcryptjs.compareSync(pass, usuario.password);
+        if(!validarPasswordLogin){
+            return res.status(400).json({msg:"Usuairo y/o contraseña invalidos"})
+        }
+
+        const token = await generarJWT(usuario.id);
+        
+        res.json({
+            nombreUsuario : usuario.nombreUsuario,
+            rol : usuario.rol,
+            id : usuario.id,
+            token
+        })
+
+    },
+
+    //traer lista de usuarios
+    traerListaUsuariosGet : async(req, res)=>{
+        console.log("entre");
+        // capturar variable
+        const valor = req.query.value;
+
+        // buscar por id en la bd
+        const user = await pool.query(`SELECT * FROM usuario WHERE nombre like '%${valor}%' or nombreUsuario like '%${valor}%' or rol like '%${valor}%'`);
+
+        //transforar en un objeto
+        const usuario = JSON.parse(JSON.stringify(user));
+
+        // responder
+        res.json({usuario})
+    },
 
 }
 

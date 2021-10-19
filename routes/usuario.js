@@ -15,6 +15,7 @@ import {
     existeUsuarioByNombreUsuario,
     validarPassword,
     validarRolUsuario,
+    validarExisteNombreUsuario
 } from "../helpers/usuario.js"
 
 
@@ -22,6 +23,7 @@ import {
 // metodo de enrutar
 const router = Router();
 
+// agregar usuario
 router.post('/agregar',[
     check('nombreUsuario','Nombre de usuario obligatorio').not().isEmpty(),
     check('password','constraseña de usuario obligatoria').not().isEmpty(),
@@ -33,6 +35,24 @@ router.post('/agregar',[
 
     validarCampo
 ],usuarioControllers.guardarUsuarioPost);
+
+// iniciar sesion
+router.post('/iniciarSesion',[
+    check('nombreUsuario','Nombre de usuario obligatorio').not().isEmpty(),
+    check('password','constraseña de usuario obligatoria').not().isEmpty(),
+
+    check('nombreUsuario').custom(validarExisteNombreUsuario),
+    check('password').custom(validarPassword),
+
+    validarCampo
+],usuarioControllers.iniciarSesionUsuarioPost);
+
+// listar los usuarios de la bd
+router.get('/listarUsuarios',[
+    validarJWR,
+    validarRol(),
+    validarCampo
+],usuarioControllers.traerListaUsuariosGet);
 
 
 export default router

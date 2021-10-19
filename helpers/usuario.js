@@ -59,9 +59,36 @@ const validarDireccionAgregarUser = async (direccion)=>{
     return true
 }
 
+const validarExisteNombreUsuario = async(nombreUsuario)=>{
+   // limpir variable
+   nombreUsuario = nombreUsuario.toString().toLowerCase().trim();
+
+   //no estar vacio
+   if(nombreUsuario.length==0){
+       throw new Error("Nombre de usuario vacio");
+   }
+
+   //validar longitud
+   if(nombreUsuario.length > 50){
+       throw new Error("Nombre de usuario supero los 50 caracteres")
+   }
+
+   // traer usuarios de la bd
+   const usuario = await pool.query('SELECT * FROM usuario WHERE nombreUsuario = ?', [nombreUsuario]);
+
+   //transforar en un objeto
+   const user = JSON.parse(JSON.stringify(usuario));
+
+   // validar que este vacio
+   if(user.length==0){
+       throw new Error("Usuario no existente")
+   } 
+}
+
 export {
     existeUsuarioByNombreUsuario,
     validarPassword,
     validarRolUsuario,
+    validarExisteNombreUsuario,
     validarDireccionAgregarUser
 }

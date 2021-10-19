@@ -11,7 +11,8 @@ CREATE TABLE usuario(
     nombreUsuario VARCHAR(50) NOT NULL,
     password VARCHAR(150) NOT NULL,
     rol VARCHAR(30) NOT NULL,
-    direccion VARCHAR(50)
+    direccion VARCHAR(50),
+    created_At timestamp NOT NULL DEFAULT current_timestamp
 );
 
 -- mostrar tablas de la bd
